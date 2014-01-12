@@ -10,26 +10,24 @@
 #define _ASM_STUFF_
 
 // Constant Defination
-#define STUFF_SLOT_SIZE 100
+#define STUFF_SLOT_SIZE 20
 
 // Stuff Status Defination
 #define STUFF_EMPTY     0
-#define STUFF_LESS      1
-#define STUFF_NORMAL    2
-
-#define STUFF_LESS_EDGE 10
+#define STUFF_NORMAL    1
 
 // Stuff Structure
-typedef struct
+typedef struct _STUFF
 {
-    char name[50];
     unsigned char amount;
     unsigned char status;
     unsigned char price;
 }STUFF;
 
 // Stuff relative Functions
-int stuffInit(STUFF *stuff, char name[], unsigned char price);
-int stuffStatus(STUFF *stuff);
-int stuffBuy(STUFF *stuff, unsigned char num);
+int stuffInit(STUFF *stuff, unsigned char amount, unsigned char price);
+int stuffUpdateStatus(STUFF *stuff);
+int stuffGetStatus(STUFF *stuff);
+int stuffGetPrice(STUFF *stuff);
+int stuffBuy(STUFF *stuff);
 #endif

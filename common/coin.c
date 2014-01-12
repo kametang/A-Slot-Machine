@@ -6,43 +6,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
-int coinInit(COIN_SLOT *coinslot)
-{
-    unsigned char i;
-    for(i = 0; i < 4; i++){
-        coinslot[i]->coinType = i;
-        coinslot[i]->amount = COIN_SLOT_SIZE / 2;
-        coinslot[i]->stauts = COIN_NORMAL;
-        coinslot[i]->remain = COIN_SLOT_SIZE - coinslot[i]->amount;
-    }
+#include "coin.h"
 
+int coinInit(COIN *coin, unsigned char type, unsigned char amount)
+{
+    coin->coinType = type;
+    coin->amount = amount;
+    coinUpdateStatus(coin);
     return 0;
 }
 
-
-int coinStatus(COIN *coin)
+int coinUpdateStatus(COIN *coin)
 {
-    if(coin->amount == 0)
-        coin->stauts = COIN_EMPTY;
-    else if(coin->amount <= COIN_LESS_EDGE)
-        coin->status = COIN_LESS;
-    else if(coin->amount == 100)
-        coin->status = COIN_FULL;
-    else if(coin->amount >= COIN_MUCH_EDGE)
-        coin->status = COIN_MUCH;
-    else
+    if(coin->amount < COIN_SLOT_SIZE){
         coin->status = COIN_NORMAL;
+        return coin->status;
+    }else if(coin->amount == COIN_SLOT_SIZE){
+        coin->status = COIN_FULL;
+        return coin->status;
+    }else
+        return -1;
+}
+
+
+int coinGetStatus(COIN *coin)
+{
+    return coin->status;
+}
+
+int coinSloting(COIN *coin)
+{
+    if(coin->status == COIN_FULL)
+        return -1;
+    coin->amount++;
+    coinUpdateStatus(coin);
 
     return coin->status;
 }
 
-int coinSloting(COIN *coin, unsigned char num)
+int coinRefund(COIN *coin, unsigned char num)
 {
-    if(num > coin->remain)
-        return -1;
-    coin->amount += num;
-    coin->remain -= num;
-    coinstatus(coin);
-
+    coin->amount -= num;
+    coinUpdateStatus(coin);
     return 0;
 }

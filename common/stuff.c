@@ -8,36 +8,42 @@
  */
 
 #include "stuff.h"
-#include <string.h>
 
-int stuffInit(STUFF *stuff, char name[], unsigned char price)
+int stuffInit(STUFF *stuff, unsigned char amount, unsigned char price)
 {
-    strcpy(stuff->name, name);
-    stuff->amount = STUFF_SLOT_SIZE;
-    stuff->status = STUFF_NORMAL;
+    stuff->amount = amount;
     stuff->price = price;
+    stuffUpdateStatus(stuff);
     return 0;
 }
 
-int stuffStatus(STUFF *stuff)
+int stuffUpdateStatus(STUFF *stuff)
 {
-    if(stuff->amount > STUFF_LESS_EDGE)
+    if(stuff->amount > 0){
         stuff->status = STUFF_NORMAL;
-    else if(stuff->amount <= STUFF_EDGE)
-        stuff->stauts = STUFF_LESS;
-    else if(stuff->amount == 0)
-        stuff->stauts = STUFF_EMPTY;
-    
+        return stuff->status;
+    }else if(stuff->amount == 0){
+        stuff->status = STUFF_EMPTY;
+        return stuff->status;
+    }
     return stuff->status;
 }
 
-int stuffBuy(STUFF *stuff, unsigned char num)
+int stuffGetStatus(STUFF *stuff)
 {
-    if(stuff->amount < num)
-        return -1;      // Not Enough
-    else{
-        stuff->amount -= num;
-        stuffStatus(stuff);
-    }
+    return stuff->status;
+}
+
+int stuffGetPrice(STUFF *stuff)
+{
+    return stuff->price;
+}
+
+int stuffBuy(STUFF *stuff)
+{
+    if(stuff->status == STUFF_EMPTY)
+        return -1;
+    stuff->amount--;
+    stuffUpdateStatus(stuff);
     return 0;
 }

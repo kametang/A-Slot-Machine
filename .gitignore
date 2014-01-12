@@ -1,0 +1,8 @@
+report/
+kernel_driver/kernel/
+tools/
+lib/minigui_lib/mde-2.0.3/
+ramfs/
+*.o
+*.ko
+*.cmd
